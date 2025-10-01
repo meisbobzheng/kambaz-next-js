@@ -171,6 +171,7 @@ export default function Lab1() {
         <h4>Image tag</h4>
         Loading an image from the internet: <br />
         <Image
+          height={500}
           id="wd-starship"
           width={500}
           src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"
@@ -180,6 +181,7 @@ export default function Lab1() {
         Loading a local image:
         <br />
         <Image
+          height={500}
           id="wd-teslabot"
           width={500}
           src="/images/teslabot.jpg"
@@ -243,21 +245,23 @@ export default function Lab1() {
           />
           <br />
         </form>
-        <textarea cols={20} rows={25} placeholder="Biography" title="tooltip">
-          Some text
-        </textarea>
+        <textarea
+          defaultValue={"Some text"}
+          cols={20}
+          rows={25}
+          placeholder="Biography"
+          title="tooltip"
+        />
         <h5>Text boxes</h5>
         <label>Biography:</label>
         <br />
-        <textarea placeholder="Biography" id="wd-textarea" cols={30} rows={10}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </textarea>
+        <textarea
+          defaultValue={"Some text"}
+          placeholder="Biography"
+          id="wd-textarea"
+          cols={30}
+          rows={10}
+        ></textarea>
         <h5 id="wd-buttons">Buttons</h5>
         <button
           type="button"
