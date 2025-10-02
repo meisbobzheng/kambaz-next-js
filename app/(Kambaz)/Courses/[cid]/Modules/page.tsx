@@ -11,8 +11,6 @@ export default function Modules() {
       <br />
       <br />
       <br />
-      <br />
-      <button id="wd-add-module">+ Module</button>
       <ListGroup className="rounded-0" id="wd-modules">
         <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">
