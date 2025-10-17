@@ -1,0 +1,47 @@
+import Link from "next/link";
+import { ListGroupItem } from "react-bootstrap";
+import { BsGripVertical } from "react-icons/bs";
+import { FaCheckCircle, FaEllipsisV } from "react-icons/fa";
+import { PiNotebookFill } from "react-icons/pi";
+
+type AssignmentListItemProps = {
+  name: string;
+  dueDate: string;
+  availableUntil: string;
+  points: number;
+};
+
+export default function AssignmentListItem({
+  name,
+  dueDate,
+  availableUntil,
+  points,
+}: AssignmentListItemProps) {
+  return (
+    <ListGroupItem className="wd-assignment-list-item">
+      <div className="d-flex align-items-center">
+        <div className="d-flex align-items-start me-3">
+          <BsGripVertical className="me-2 fs-4 text-muted" />
+          <PiNotebookFill className="fs-4 text-success" />
+        </div>
+        <div className="flex-grow-1">
+          <Link
+            href="/Courses/1234/Assignments/123"
+            className="wd-assignment-link text-decoration-none text-dark fw-bold"
+          >
+            {name}
+          </Link>
+          <div className="text-muted small">
+            <span className="text-danger">Multiple Modules</span> |{" "}
+            <b>Not available until</b> {availableUntil} |
+          </div>
+          <div className="text-muted small">
+            <b>Due</b> {dueDate} | {points} pts
+          </div>
+        </div>
+        <FaCheckCircle className="text-success me-2" />
+        <FaEllipsisV className="text-muted" />
+      </div>
+    </ListGroupItem>
+  );
+}
