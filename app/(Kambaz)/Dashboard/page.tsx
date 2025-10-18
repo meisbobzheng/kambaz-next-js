@@ -20,7 +20,7 @@ export default function Dashboard() {
               cid={course._id}
               title={course.name}
               description={course.description}
-              image="/images/react.png"
+              image={course.imageUrl}
             />
           ))}
         </Row>
