@@ -1,11 +1,21 @@
+"use client";
+
+import { useParams } from "next/navigation";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
 import { FaEllipsisV } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
+import * as db from "../../../Database";
 import AssignmentButtonGroup from "./AssignmentButtonGroup";
 import AssignmentListItem from "./AssignmentListItem";
 
 export default function Assignments() {
+  const { cid } = useParams() as { cid: string };
+  const assignments = db.assignments;
+
+  const filteredAssignments = assignments.filter(
+    (assignment: any) => assignment.course === cid
+  );
   return (
     <div id="wd-assignments" className="p-3">
       <AssignmentButtonGroup />
@@ -26,24 +36,17 @@ export default function Assignments() {
           </div>
         </ListGroupItem>
 
-        <AssignmentListItem
-          name="A1"
-          dueDate="May 13 at 11:59pm"
-          availableUntil="May 6 at 12:00am"
-          points={100}
-        />
-        <AssignmentListItem
-          name="A2"
-          dueDate="May 20 at 11:59pm"
-          availableUntil="May 13 at 12:00am"
-          points={100}
-        />
-        <AssignmentListItem
-          name="A3"
-          dueDate="May 27 at 11:59pm"
-          availableUntil="May 20 at 12:00am"
-          points={100}
-        />
+        {filteredAssignments.map((assignment: any) => (
+          <AssignmentListItem
+            key={assignment._id}
+            name={assignment.title}
+            dueDate="May 13 at 11:59pm"
+            availableUntil="May 6 at 12:00am"
+            points={100}
+            aid={assignment._id}
+            cid={cid}
+          />
+        ))}
       </ListGroup>
     </div>
   );

@@ -20,16 +20,21 @@ import ImpliedReturn from "./ImpliedReturn";
 import JsonStringify from "./JsonStringify";
 import LegacyFunctions from "./LegacyFunctions";
 import MapFunction from "./MapFunction";
+import PathParameters from "./PathParameters";
 import SimpleArrays from "./SimpleArrays";
 import Spreading from "./Spreader";
 import Square from "./Square";
 import Styles from "./Styles";
 import TemplateLiterals from "./TemplateLiterals";
 import TernaryOperator from "./TernaryOperator";
+import TodoItem from "./todos/TodoItem";
+import TodoList from "./todos/TodoList";
 import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
 
 export default function Lab3() {
+  console.log("Hello World!");
+
   return (
     <div id="wd-lab3">
       <h3>Lab 3</h3>
@@ -65,9 +70,14 @@ export default function Lab3() {
       <Square>4</Square>
       <hr />
       <Highlight>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
-        vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione
+        eaque illo minus cum, saepe totam vel nihil repellat nemo explicabo
+        excepturi consectetur. Modi omnis minus sequi maiores, provident
+        voluptates.
       </Highlight>
+      <PathParameters />
+      <TodoItem />
+      <TodoList />
     </div>
   );
 }
