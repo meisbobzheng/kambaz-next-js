@@ -1,4 +1,5 @@
 "use client";
+import { Assignment } from "@/app/types";
 import { useParams } from "next/navigation";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import * as db from "../../../../Database";
@@ -6,7 +7,7 @@ import * as db from "../../../../Database";
 export default function AssignmentEditor() {
   const { aid } = useParams() as { aid: string };
   const assignment = db.assignments.find(
-    (assignment: any) => assignment._id === aid
+    (assignment: Assignment) => assignment._id === aid
   );
 
   return (

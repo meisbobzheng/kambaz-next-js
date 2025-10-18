@@ -1,5 +1,6 @@
 "use client";
 
+import { Enrollment, User } from "@/app/types";
 import { useParams } from "next/navigation";
 import { Table } from "react-bootstrap";
 import * as db from "../../../Database";
@@ -24,13 +25,13 @@ export default function PeopleTable() {
         </thead>
         <tbody>
           {users
-            .filter((user: any) =>
+            .filter((user: User) =>
               enrollments.find(
-                (enrollment: any) =>
+                (enrollment: Enrollment) =>
                   enrollment.user === user._id && enrollment.course === cid
               )
             )
-            .map((user: any) => (
+            .map((user: User) => (
               <TablePerson
                 key={user._id}
                 firstName={user.firstName}

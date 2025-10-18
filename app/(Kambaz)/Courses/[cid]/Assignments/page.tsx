@@ -1,5 +1,6 @@
 "use client";
 
+import { Assignment } from "@/app/types";
 import { useParams } from "next/navigation";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
@@ -14,7 +15,7 @@ export default function Assignments() {
   const assignments = db.assignments;
 
   const filteredAssignments = assignments.filter(
-    (assignment: any) => assignment.course === cid
+    (assignment: Assignment) => assignment.course === cid
   );
   return (
     <div id="wd-assignments" className="p-3">
@@ -36,7 +37,7 @@ export default function Assignments() {
           </div>
         </ListGroupItem>
 
-        {filteredAssignments.map((assignment: any) => (
+        {filteredAssignments.map((assignment: Assignment) => (
           <AssignmentListItem
             key={assignment._id}
             name={assignment.title}
