@@ -1,8 +1,8 @@
 "use client";
 
 import { Course } from "@/app/types";
-import { useRouter } from "next/compat/router";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Button,
   Card,
@@ -17,12 +17,20 @@ type CourseCardProps = {
   course: Course;
   deleteCourse: (courseId: string) => void;
   setCourse: (course: Course) => void;
+  isEnrolled: boolean;
+  onEnroll: (courseId: string) => void;
+  onUnenroll: (courseId: string) => void;
+  isFaculty: boolean;
 };
 
 export default function CourseCard({
   course,
   deleteCourse,
   setCourse,
+  isEnrolled,
+  onEnroll,
+  onUnenroll,
+  isFaculty,
 }: CourseCardProps) {
   const nav = useRouter();
 
@@ -46,40 +54,78 @@ export default function CourseCard({
             >
               {description}
             </CardText>
-            <Button
-              size="sm"
-              onClick={() => {
-                nav?.push(`/Courses/${cid}/Home`);
-              }}
-              className="btn"
-              id="wd-go-to-course-click"
-            >
-              Go
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              style={{ marginBottom: "10px" }}
-              onClick={(event) => {
-                event.preventDefault();
-                deleteCourse(cid);
-              }}
-              className="btn btn-danger float-end"
-              id="wd-delete-course-click"
-            >
-              Delete
-            </Button>
-            <Button
-              size="sm"
-              onClick={(event) => {
-                event.preventDefault();
-                setCourse(course);
-              }}
-              className="btn btn-warning float-end me-2"
-              id="wd-update-course-click"
-            >
-              Update
-            </Button>
+            {isEnrolled && (
+              <Button
+                size="sm"
+                onClick={() => {
+                  nav?.push(`/Courses/${cid}/Home`);
+                }}
+                className="btn"
+                id="wd-go-to-course-click"
+              >
+                Go
+              </Button>
+            )}
+            {isFaculty && (
+              <>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  style={{ marginBottom: "10px" }}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    deleteCourse(cid);
+                  }}
+                  className="btn btn-danger float-end"
+                  id="wd-delete-course-click"
+                >
+                  Delete
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCourse(course);
+                  }}
+                  className="btn btn-warning float-end me-2"
+                  id="wd-update-course-click"
+                >
+                  Update
+                </Button>
+              </>
+            )}
+            {!isFaculty && (
+              <>
+                {isEnrolled ? (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onUnenroll(cid);
+                    }}
+                    className="float-end"
+                    id="wd-unenroll-course-click"
+                  >
+                    Unenroll
+                  </Button>
+                ) : (
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onEnroll(cid);
+                    }}
+                    className="float-end"
+                    id="wd-enroll-course-click"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Enroll
+                  </Button>
+                )}
+              </>
+            )}
           </CardBody>
         </Link>
       </Card>

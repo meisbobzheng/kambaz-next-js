@@ -1,13 +1,27 @@
 "use client";
-import { Course } from "@/app/types";
+import { Course, Enrollment, User } from "@/app/types";
 import { useState } from "react";
-import { FormControl, Row } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
-import * as db from "../Database";
+import { Button, FormControl, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
+import { enrollInCourse, unenrollFromCourse } from "../Enrollments/reducer";
 import CourseCard from "./CourseCard";
 
 export default function Dashboard() {
-  const [courses, setCourses] = useState(db.courses);
+  const { currentUser } = useSelector(
+    (state: { accountReducer: { currentUser: User } }) => state.accountReducer
+  );
+
+  const { enrollments } = useSelector(
+    (state: { enrollmentsReducer: { enrollments: Enrollment[] } }) =>
+      state.enrollmentsReducer
+  );
+
+  const { courses } = useSelector(
+    (state: { coursesReducer: { courses: Course[] } }) => state.coursesReducer
+  );
+
+  const dispatch = useDispatch();
   const [course, setCourse] = useState<Course>({
     _id: "0",
     name: "New Course",
@@ -20,72 +34,108 @@ export default function Dashboard() {
     department: "New Department",
     credits: 4,
   });
-  const updateCourse = () => {
-    setCourses(
-      courses.map((c) => {
-        if (c._id === course._id) {
-          return course;
-        } else {
-          return c;
-        }
-      })
+
+  const [showAllCourses, setShowAllCourses] = useState(false);
+
+  const isFaculty = currentUser?.role === "FACULTY";
+
+  const deleteCourseDispatch = (courseId: string) => {
+    dispatch(deleteCourse(courseId));
+  };
+
+  const handleEnroll = (courseId: string) => {
+    if (currentUser) {
+      dispatch(enrollInCourse({ userId: currentUser._id, courseId }));
+    }
+  };
+
+  const handleUnenroll = (courseId: string) => {
+    if (currentUser) {
+      dispatch(unenrollFromCourse({ userId: currentUser._id, courseId }));
+    }
+  };
+
+  const isEnrolled = (courseId: string) => {
+    return enrollments.some(
+      (enrollment: Enrollment) =>
+        enrollment.user === currentUser?._id && enrollment.course === courseId
     );
   };
 
-  const addNewCourse = () => {
-    const newCourse = { ...course, _id: uuidv4() };
-    setCourses([...courses, newCourse]);
-  };
-  const deleteCourse = (courseId: string) => {
-    setCourses(courses.filter((course) => course._id !== courseId));
-  };
+  // Filter courses based on showAllCourses toggle
+  const displayedCourses = showAllCourses
+    ? courses
+    : courses.filter((course: Course) => isEnrolled(course._id));
+
+  const enrolledCoursesCount = courses.filter((course: Course) =>
+    isEnrolled(course._id)
+  ).length;
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-      <h5>
-        New Course
-        <button
-          className="btn btn-primary float-end"
-          id="wd-add-new-course-click"
-          onClick={addNewCourse}
-        >
-          {" "}
-          Add{" "}
-        </button>
-        <button
-          className="btn btn-warning float-end me-2"
-          onClick={updateCourse}
-          id="wd-update-course-click"
-        >
-          Update{" "}
-        </button>
-      </h5>
-      <br />
-      <FormControl
-        value={course.name}
-        onChange={(e) => setCourse({ ...course, name: e.target.value })}
-        className="mb-2"
-      />
-      <FormControl
-        value={course.description}
-        onChange={(e) => setCourse({ ...course, description: e.target.value })}
-        as="textarea"
-        rows={3}
-      />
-      <hr />
+      {isFaculty && (
+        <>
+          <h5>
+            New Course
+            <Button
+              variant="primary"
+              className="float-end"
+              id="wd-add-new-course-click"
+              onClick={() => dispatch(addNewCourse(course))}
+            >
+              Add
+            </Button>
+            <Button
+              variant="warning"
+              className="float-end me-2"
+              onClick={() => dispatch(updateCourse(course))}
+              id="wd-update-course-click"
+            >
+              Update
+            </Button>
+          </h5>
+          <br />
+          <FormControl
+            value={course.name}
+            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+            className="mb-2"
+          />
+          <FormControl
+            value={course.description}
+            onChange={(e) =>
+              setCourse({ ...course, description: e.target.value })
+            }
+            as="textarea"
+            rows={3}
+          />
+          <hr />
+        </>
+      )}
       <h2 id="wd-dashboard-published">
-        Published Courses ({courses.length})
-      </h2>{" "}
+        Published Courses ({enrolledCoursesCount})
+        <Button
+          variant="primary"
+          className="float-end"
+          id="wd-enrollments-btn"
+          onClick={() => setShowAllCourses(!showAllCourses)}
+        >
+          {showAllCourses ? "My Courses" : "Enrollments"}
+        </Button>
+      </h2>
       <hr />
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses.map((course) => (
+          {displayedCourses.map((course) => (
             <CourseCard
               key={course._id}
               course={course}
               setCourse={setCourse}
-              deleteCourse={deleteCourse}
+              deleteCourse={deleteCourseDispatch}
+              isEnrolled={isEnrolled(course._id)}
+              onEnroll={handleEnroll}
+              onUnenroll={handleUnenroll}
+              isFaculty={isFaculty}
             />
           ))}
         </Row>

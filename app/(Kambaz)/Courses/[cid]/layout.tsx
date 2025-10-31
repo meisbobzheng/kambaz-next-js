@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { FaAlignJustify } from "react-icons/fa";
 import { courses } from "../../Database";
 import Breadcrumb from "./Breadcrumb";
+import EnrollmentGuard from "./EnrollmentGuard";
 import CourseNavigation from "./Navigation";
 
 export default async function CoursesLayout({
@@ -12,18 +13,20 @@ export default async function CoursesLayout({
   const course = courses.find((course) => course._id === cid);
 
   return (
-    <div id="wd-courses">
-      <h2 className="text-danger">
-        <FaAlignJustify className="me-4 fs-4 mb-1" />
-        <Breadcrumb course={course} />
-      </h2>{" "}
-      <hr />
-      <div className="d-flex">
-        <div className="d-none d-md-block">
-          <CourseNavigation />
+    <EnrollmentGuard courseId={cid}>
+      <div id="wd-courses">
+        <h2 className="text-danger">
+          <FaAlignJustify className="me-4 fs-4 mb-1" />
+          <Breadcrumb course={course} />
+        </h2>{" "}
+        <hr />
+        <div className="d-flex">
+          <div className="d-none d-md-block">
+            <CourseNavigation />
+          </div>
+          <div className="flex-fill">{children}</div>
         </div>
-        <div className="flex-fill">{children}</div>
       </div>
-    </div>
+    </EnrollmentGuard>
   );
 }

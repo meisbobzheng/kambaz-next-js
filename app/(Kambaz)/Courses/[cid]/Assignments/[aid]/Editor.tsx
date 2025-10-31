@@ -1,14 +1,27 @@
 "use client";
 import { Assignment } from "@/app/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import * as db from "../../../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { updateAssignment } from "../reducer";
 
 export default function AssignmentEditor() {
   const { aid } = useParams() as { aid: string };
-  const assignment = db.assignments.find(
-    (assignment: Assignment) => assignment._id === aid
+
+  const currentAssignment = useSelector(
+    (state: { assignmentsReducer: { assignments: Assignment[] } }) =>
+      state.assignmentsReducer.assignments.find(
+        (assignment: Assignment) => assignment._id === aid
+      )
   );
+
+  const [assignment, setAssignment] = useState(currentAssignment);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  if (!assignment) return null;
 
   return (
     <div id="wd-assignments-editor" className="p-3">
@@ -19,6 +32,9 @@ export default function AssignmentEditor() {
             type="text"
             id="wd-name"
             defaultValue={assignment?.title || ""}
+            onChange={(e) =>
+              setAssignment({ ...assignment, title: e.target.value })
+            }
           />
         </Form.Group>
 
@@ -28,6 +44,9 @@ export default function AssignmentEditor() {
             id="wd-description"
             rows={4}
             defaultValue={assignment?.description || ""}
+            onChange={(e) =>
+              setAssignment({ ...assignment, description: e.target.value })
+            }
           />
         </Form.Group>
 
@@ -40,6 +59,12 @@ export default function AssignmentEditor() {
               type="number"
               id="wd-points"
               defaultValue={assignment?.points || 0}
+              onChange={(e) =>
+                setAssignment({
+                  ...assignment,
+                  points: parseInt(e.target.value),
+                })
+              }
             />
           </Col>
         </Form.Group>
@@ -49,7 +74,12 @@ export default function AssignmentEditor() {
             Assignment Group
           </Form.Label>
           <Col sm={10}>
-            <Form.Select id="wd-group">
+            <Form.Select
+              id="wd-group"
+              onChange={(e) =>
+                setAssignment({ ...assignment, group: e.target.value })
+              }
+            >
               <option value="ASSIGNMENTS">ASSIGNMENTS</option>
               <option value="QUIZZES">QUIZZES</option>
               <option value="EXAMS">EXAMS</option>
@@ -63,7 +93,12 @@ export default function AssignmentEditor() {
             Display Grade as
           </Form.Label>
           <Col sm={10}>
-            <Form.Select id="wd-display-grade-as">
+            <Form.Select
+              id="wd-display-grade-as"
+              onChange={(e) =>
+                setAssignment({ ...assignment, displayGradeAs: e.target.value })
+              }
+            >
               <option value="Percentage">Percentage</option>
               <option value="Points">Points</option>
               <option value="Letter Grade">Letter Grade</option>
@@ -78,7 +113,16 @@ export default function AssignmentEditor() {
           </Form.Label>
           <Col sm={10}>
             <div className="border rounded p-3">
-              <Form.Select id="wd-submission-type" className="mb-3">
+              <Form.Select
+                id="wd-submission-type"
+                className="mb-3"
+                onChange={(e) =>
+                  setAssignment({
+                    ...assignment,
+                    submissionType: e.target.value,
+                  })
+                }
+              >
                 <option value="Online">Online</option>
                 <option value="Paper">Paper</option>
                 <option value="External Tool">External Tool</option>
@@ -133,6 +177,9 @@ export default function AssignmentEditor() {
                 id="wd-assign-to"
                 defaultValue="Everyone"
                 className="mb-3"
+                onChange={(e) =>
+                  setAssignment({ ...assignment, assignTo: e.target.value })
+                }
               />
 
               <Form.Label htmlFor="wd-due-date" className="fw-bold">
@@ -143,6 +190,9 @@ export default function AssignmentEditor() {
                 id="wd-due-date"
                 defaultValue={assignment?.dueDate || ""}
                 className="mb-3"
+                onChange={(e) =>
+                  setAssignment({ ...assignment, dueDate: e.target.value })
+                }
               />
 
               <Row>
@@ -154,6 +204,12 @@ export default function AssignmentEditor() {
                     type="datetime-local"
                     id="wd-available-from"
                     defaultValue={assignment?.availableFrom || ""}
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableFrom: e.target.value,
+                      })
+                    }
                   />
                 </Col>
                 <Col>
@@ -164,6 +220,12 @@ export default function AssignmentEditor() {
                     type="datetime-local"
                     id="wd-available-until"
                     defaultValue={assignment?.dueDate || ""}
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableUntil: e.target.value,
+                      })
+                    }
                   />
                 </Col>
               </Row>
@@ -174,10 +236,24 @@ export default function AssignmentEditor() {
         <hr />
 
         <div className="d-flex justify-content-end gap-2">
-          <Button variant="secondary" type="button">
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() =>
+              router.push(`/Courses/${assignment.course}/Assignments`)
+            }
+          >
             Cancel
           </Button>
-          <Button variant="danger" type="submit">
+          <Button
+            variant="danger"
+            type="button"
+            onClick={() => {
+              console.log("f");
+              dispatch(updateAssignment(assignment));
+              router.push(`/Courses/${assignment.course}/Assignments`);
+            }}
+          >
             Save
           </Button>
         </div>

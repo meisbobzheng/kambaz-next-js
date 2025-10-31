@@ -6,6 +6,13 @@ export type Assignment = {
   points: number;
   dueDate: string;
   availableFrom: string;
+  availableUntil?: string;
+  group?: string;
+  displayGradeAs?: string;
+  submissionType?: string;
+  entryOptions?: string[];
+  assignTo?: string;
+  assignToOptions?: string[];
 };
 export type Course = {
   _id: string;
@@ -41,9 +48,10 @@ export type Enrollment = {
 export type Module = {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
   course: string;
   lessons?: Lesson[];
+  editing?: boolean;
 };
 export type Lesson = {
   _id: string;
