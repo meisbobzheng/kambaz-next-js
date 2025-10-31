@@ -1,4 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+export type Todo = {
+  id: string;
+  title: string;
+};
+
 const initialState = {
   todos: [
     { id: "1", title: "Learn React" },

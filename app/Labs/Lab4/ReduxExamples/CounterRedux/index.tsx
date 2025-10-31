@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { decrement, increment } from "./counterReducer";
 export default function CounterRedux() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { count } = useSelector((state: any) => state.counterReducer);
   const dispatch = useDispatch();
   return (
