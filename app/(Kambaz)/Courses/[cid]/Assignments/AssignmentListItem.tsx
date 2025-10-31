@@ -9,6 +9,8 @@ type AssignmentListItemProps = {
   dueDate: string;
   availableUntil: string;
   points: number;
+  aid: string;
+  cid: string;
 };
 
 export default function AssignmentListItem({
@@ -16,6 +18,8 @@ export default function AssignmentListItem({
   dueDate,
   availableUntil,
   points,
+  aid,
+  cid,
 }: AssignmentListItemProps) {
   return (
     <ListGroupItem className="wd-assignment-list-item">
@@ -26,7 +30,7 @@ export default function AssignmentListItem({
         </div>
         <div className="flex-grow-1">
           <Link
-            href="/Courses/1234/Assignments/123"
+            href={`/Courses/${cid}/Assignments/${aid}`}
             className="wd-assignment-link text-decoration-none text-dark fw-bold"
           >
             {name}

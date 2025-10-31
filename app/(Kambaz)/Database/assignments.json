@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "description": "Calculate the propulsions of these rockets.",
+    "course": "RS101",
+    "points": 100,
+    "dueDate": "2023-05-13T23:59",
+    "availableFrom": "2023-05-06T00:00"
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101",
+    "description": "Calculate the combustion efficiency of these rockets.",
+    "points": 50,
+    "dueDate": "2023-05-20T23:59",
+    "availableFrom": "2023-05-13T00:00"
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101",
+    "description": "Design a nozzle for a given rocket.",
+    "points": 200,
+    "dueDate": "2023-05-27T23:59",
+    "availableFrom": "2023-05-20T00:00"
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102",
+    "description": "First major quiz of the course.",
+    "points": 100,
+    "dueDate": "2023-06-02T23:59",
+    "availableFrom": "2023-06-01T00:00"
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102",
+    "description": "Conduct an in depth analysis of the flow of these rockets.",
+    "points": 50,
+    "dueDate": "2023-06-09T23:59",
+    "availableFrom": "2023-06-02T00:00"
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102",
+    "description": "Conduct an in depth analysis of the heating of these rockets.",
+    "points": 50,
+    "dueDate": "2023-06-16T23:59",
+    "availableFrom": "2023-06-09T00:00"
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103",
+    "description": "Study the structural design of these rockets.",
+    "points": 100,
+    "dueDate": "2023-06-23T23:59",
+    "availableFrom": "2023-06-09T00:00"
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103",
+    "description": "Calculate the orbits of these rockets.",
+    "points": 100,
+    "dueDate": "2023-05-13T23:59",
+    "availableFrom": "2023-05-06T00:00"
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103",
+    "description": "Exam on systems engineering.",
+    "points": 200,
+    "dueDate": "2023-05-13T23:59",
+    "availableFrom": "2023-05-06T00:00"
+  }
+]
