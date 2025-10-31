@@ -17,7 +17,7 @@ export type Course = {
   credits: number;
   imageUrl: string;
   description: string;
-  author: string;
+  author?: string;
 };
 export type User = {
   _id: string;
