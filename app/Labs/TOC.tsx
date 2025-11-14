@@ -69,6 +69,14 @@ export default function TOC() {
       </NavItem>{" "}
       <NavItem>
         <NavLink
+          id="wd-server"
+          href="https://kambaz-node-server-app-bz.onrender.com"
+        >
+          Server
+        </NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink
           id="wd-github"
           href="https://github.com/meisbobzheng/kambaz-next-js"
         >
