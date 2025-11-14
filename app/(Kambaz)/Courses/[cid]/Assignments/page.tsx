@@ -2,24 +2,46 @@
 
 import { Assignment } from "@/app/types";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
 import { FaEllipsisV } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
-import * as db from "../../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import AssignmentButtonGroup from "./AssignmentButtonGroup";
 import AssignmentListItem from "./AssignmentListItem";
+import { addAssignment, deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams() as { cid: string };
-  const assignments = db.assignments;
+  const { assignments } = useSelector(
+    (state: { assignmentsReducer: { assignments: Assignment[] } }) =>
+      state.assignmentsReducer
+  );
+  const [assignment, setAssignment] = useState<Assignment>({
+    _id: "",
+    title: "Assignment Title",
+    description: "Assignment Description",
+    course: cid,
+    points: 0,
+    dueDate: new Date().toISOString(),
+    availableFrom: new Date().toISOString(),
+  });
+  const dispatch = useDispatch();
 
   const filteredAssignments = assignments.filter(
     (assignment: Assignment) => assignment.course === cid
   );
   return (
     <div id="wd-assignments" className="p-3">
-      <AssignmentButtonGroup />
+      <AssignmentButtonGroup
+        setAssignment={setAssignment}
+        assignment={assignment}
+        addAssignment={() =>
+          dispatch(addAssignment({ ...assignment, _id: uuidv4() }))
+        }
+      />
 
       <ListGroup id="wd-assignment-list" className="mt-3">
         <ListGroupItem className="p-3 bg-light">
@@ -41,11 +63,14 @@ export default function Assignments() {
           <AssignmentListItem
             key={assignment._id}
             name={assignment.title}
-            dueDate="May 13 at 11:59pm"
-            availableUntil="May 6 at 12:00am"
-            points={100}
+            dueDate={new Date(assignment.dueDate).toLocaleDateString()}
+            availableUntil={new Date(
+              assignment.availableFrom
+            ).toLocaleDateString()}
+            points={assignment.points}
             aid={assignment._id}
             cid={cid}
+            deleteAssignment={(aid) => dispatch(deleteAssignment(aid))}
           />
         ))}
       </ListGroup>

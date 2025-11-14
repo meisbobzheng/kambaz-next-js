@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ListGroupItem } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { FaCheckCircle, FaEllipsisV } from "react-icons/fa";
+import { FaTrashCan } from "react-icons/fa6";
 import { PiNotebookFill } from "react-icons/pi";
 
 type AssignmentListItemProps = {
@@ -11,6 +12,7 @@ type AssignmentListItemProps = {
   points: number;
   aid: string;
   cid: string;
+  deleteAssignment: (aid: string) => void;
 };
 
 export default function AssignmentListItem({
@@ -20,6 +22,7 @@ export default function AssignmentListItem({
   points,
   aid,
   cid,
+  deleteAssignment,
 }: AssignmentListItemProps) {
   return (
     <ListGroupItem className="wd-assignment-list-item">
@@ -43,6 +46,10 @@ export default function AssignmentListItem({
             <b>Due</b> {dueDate} | {points} pts
           </div>
         </div>
+        <FaTrashCan
+          className="text-danger me-2"
+          onClick={() => deleteAssignment(aid)}
+        />
         <FaCheckCircle className="text-success me-2" />
         <FaEllipsisV className="text-muted" />
       </div>
