@@ -1,25 +1,61 @@
 "use client";
 import { Assignment } from "@/app/types";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { updateAssignment } from "../reducer";
+import * as client from "../../../client";
+import { setAssignments } from "../reducer";
 
 export default function AssignmentEditor() {
-  const { aid } = useParams() as { aid: string };
+  const { aid, cid } = useParams() as { aid: string; cid: string };
 
-  const currentAssignment = useSelector(
+  const { assignments } = useSelector(
     (state: { assignmentsReducer: { assignments: Assignment[] } }) =>
-      state.assignmentsReducer.assignments.find(
-        (assignment: Assignment) => assignment._id === aid
-      )
+      state.assignmentsReducer
+  );
+
+  const currentAssignment = assignments.find(
+    (assignment: Assignment) => assignment._id === aid
   );
 
   const [assignment, setAssignment] = useState(currentAssignment);
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const fetchAssignments = async () => {
+    try {
+      console.log("Editor: Fetching assignments for course:", cid);
+      const assignments = await client.findAssignmentsForCourse(cid as string);
+      console.log("Editor: Assignments fetched:", assignments);
+      dispatch(setAssignments(assignments));
+    } catch (error) {
+      console.error("Editor: Error fetching assignments:", error);
+    }
+  };
+
+  const onUpdateAssignment = async () => {
+    if (!assignment) return;
+    try {
+      console.log("Editor: Updating assignment:", assignment._id);
+      await client.updateAssignment(assignment);
+      const updatedAssignments = assignments.map((a: Assignment) =>
+        a._id === assignment._id ? assignment : a
+      );
+      dispatch(setAssignments(updatedAssignments));
+      console.log("Editor: Assignment updated successfully");
+    } catch (error) {
+      console.error("Editor: Error updating assignment:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (cid) {
+      fetchAssignments();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cid]);
 
   if (!assignment) return null;
 
@@ -248,9 +284,8 @@ export default function AssignmentEditor() {
           <Button
             variant="danger"
             type="button"
-            onClick={() => {
-              console.log("f");
-              dispatch(updateAssignment(assignment));
+            onClick={async () => {
+              await onUpdateAssignment();
               router.push(`/Courses/${assignment.course}/Assignments`);
             }}
           >

@@ -2,16 +2,16 @@
 
 import { Assignment } from "@/app/types";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
 import { FaEllipsisV } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
+import * as client from "../../client";
 import AssignmentButtonGroup from "./AssignmentButtonGroup";
 import AssignmentListItem from "./AssignmentListItem";
-import { addAssignment, deleteAssignment } from "./reducer";
+import { setAssignments } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams() as { cid: string };
@@ -30,6 +30,51 @@ export default function Assignments() {
   });
   const dispatch = useDispatch();
 
+  const onCreateAssignmentForCourse = async () => {
+    if (!cid) return;
+    try {
+      console.log("Creating assignment for course:", cid);
+      const newAssignment = await client.createAssignmentForCourse(
+        cid as string,
+        assignment
+      );
+      console.log("Assignment created:", newAssignment);
+      dispatch(setAssignments([...assignments, newAssignment]));
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+    }
+  };
+
+  const fetchAssignments = async () => {
+    try {
+      console.log("Fetching assignments for course:", cid);
+      const assignments = await client.findAssignmentsForCourse(cid as string);
+      console.log("Assignments fetched:", assignments);
+      dispatch(setAssignments(assignments));
+    } catch (error) {
+      console.error("Error fetching assignments:", error);
+    }
+  };
+
+  const onRemoveAssignment = async (assignmentId: string) => {
+    try {
+      console.log("Deleting assignment:", assignmentId);
+      await client.deleteAssignment(assignmentId);
+      dispatch(
+        setAssignments(assignments.filter((a: any) => a._id !== assignmentId))
+      );
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (cid) {
+      fetchAssignments();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cid]);
+
   const filteredAssignments = assignments.filter(
     (assignment: Assignment) => assignment.course === cid
   );
@@ -38,9 +83,7 @@ export default function Assignments() {
       <AssignmentButtonGroup
         setAssignment={setAssignment}
         assignment={assignment}
-        addAssignment={() =>
-          dispatch(addAssignment({ ...assignment, _id: uuidv4() }))
-        }
+        addAssignment={onCreateAssignmentForCourse}
       />
 
       <ListGroup id="wd-assignment-list" className="mt-3">
@@ -70,7 +113,7 @@ export default function Assignments() {
             points={assignment.points}
             aid={assignment._id}
             cid={cid}
-            deleteAssignment={(aid) => dispatch(deleteAssignment(aid))}
+            deleteAssignment={onRemoveAssignment}
           />
         ))}
       </ListGroup>
